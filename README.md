@@ -1,5 +1,4 @@
-# Pre-work - codePath_ToDo_app
-# Simple ToDo app (Android)
+# Simple ToDo app (Android) - Pre-work
 
 "Simple To Do" is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing item.
 
@@ -30,7 +29,7 @@ Here's a walkthrough of implemented user stories:
 
 * Adding items on the ToDo application
 
-<img src='https://www.dropbox.com/s/1jojq8fw62elita/todo_userStory1.gif?dl=0' title='ToDo - Add Item- Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://imgur.com/gallery/DZqeyOO' title='ToDo - Add Item- Video Walkthrough' width='' alt='Video Walkthrough' />
 
 * Removing items from list - to remove an item press and hold the item to be removed (long click)
 
