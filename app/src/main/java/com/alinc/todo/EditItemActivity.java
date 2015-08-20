@@ -54,7 +54,6 @@ public class EditItemActivity extends AppCompatActivity {
         data.putExtra("updateItemText", etUpdateItem.getText().toString());
         data.putExtra("position", getIntent().getExtras().getInt("pos"));
         data.putExtra("id", getIntent().getExtras().getLong("id"));
-        data.putExtra("code", 200);
 
         setResult(RESULT_OK, data);
         finish();
