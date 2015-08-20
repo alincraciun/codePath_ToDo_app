@@ -1,13 +1,9 @@
 package com.alinc.todo;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;
-    private final int REQUEST_CODE = 200;
+    private static final int REQUEST_CODE = 200;
 
-    private static final String DATABASE_NAME = "ToDo.db";
-    private static final int DATABASE_VERSION = 2;
+    //private static final String DATABASE_NAME = "ToDo.db";
+    //private static final int DATABASE_VERSION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            System.out.println("AR SET......");
             items.set(data.getExtras().getInt("position"), data.getExtras().getString("updateItemText"));
             itemsAdapter.notifyDataSetChanged();
             writeItems();
