@@ -29,15 +29,15 @@ Here's a walkthrough of implemented user stories:
 
 * Adding items on the ToDo application
 
-<img src='' title='ToDo - Add Item- Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='resources/raw/todo_userStory1.gif' title='ToDo - Add Item- Video Walkthrough' width='50%' alt='Video Walkthrough' />
 
 * Removing items from list - to remove an item press and hold the item to be removed (long click)
 
-<img src='' title='ToDo - Remove Item- Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='resources/raw/todo_userStory2.gif' title='ToDo - Remove Item- Video Walkthrough' width='50%' alt='Video Walkthrough' />
 
 * Editing an item from list - to edit an item, scroll to desired item and tap.
 
-<img src='' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='resources/raw/todo_userStory3.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' />
 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
