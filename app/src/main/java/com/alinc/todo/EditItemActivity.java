@@ -4,12 +4,18 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+
+import java.util.Date;
 
 public class EditItemActivity extends AppCompatActivity {
+    private TodoItemDatabase db;
+    private int itemPriority;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +28,24 @@ public class EditItemActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayUseLogoEnabled(true);
         }
         EditText editItem = (EditText)findViewById(R.id.etEditItem);
-        editItem.setText(getIntent().getStringExtra("currentItemText"));
+        editItem.setText(getIntent().getStringExtra("itemText"));
         editItem.setSelection(editItem.getText().length());
+
+        itemPriority = Integer.parseInt(getIntent().getStringExtra("priority"));
+
+        if(itemPriority == 3) {
+            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority3);
+            radioButton.performClick();
+        }
+        else if (itemPriority == 2) {
+            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority2);
+            radioButton.performClick();
+        }
+        else {
+            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority1);
+            radioButton.performClick();
+        }
+
     }
 
     @Override
@@ -54,8 +76,30 @@ public class EditItemActivity extends AppCompatActivity {
         data.putExtra("updateItemText", etUpdateItem.getText().toString());
         data.putExtra("position", getIntent().getExtras().getInt("pos"));
         data.putExtra("id", getIntent().getExtras().getLong("id"));
+        data.putExtra("priority", itemPriority);
+        data.putExtra("itemId", getIntent().getStringExtra("itemId"));
 
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.rbPriority3:
+                if (checked)
+                    itemPriority = 3;
+                    break;
+            case R.id.rbPriority2:
+                if (checked)
+                    itemPriority = 2;
+                    break;
+            case R.id.rbPriority1:
+                if (checked)
+                    itemPriority = 1;
+                break;
+        }
     }
 }

@@ -4,5 +4,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_edit_item"> Edit Item</string>
     <string name="btSaveName">Save</string>
+    <string name="tvPriorityLabel">Priority</string>
+    <string name="rbPriority1">Life Matter</string>
+    <string name="rbPriority2">Get it done!</string>
+    <string name="rbPriority3">Just Do It</string>
 
 </resources>

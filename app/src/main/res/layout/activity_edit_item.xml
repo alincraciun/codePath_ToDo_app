@@ -25,8 +25,51 @@
         android:text="@string/btSaveName"
         android:id="@+id/btSave"
         android:onClick="onSubmit"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/tvPriorityLabel"
+        android:id="@+id/tvPriorityLabel"
         android:layout_below="@+id/etEditItem"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="46dp" />
+        android:autoText="false"
+        android:textSize="14dp" />
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tvPriorityLabel">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbPriority1"
+            android:id="@+id/rbPriority1"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="12dp"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbPriority2"
+            android:id="@+id/rbPriority2"
+            android:textColor="#ff4500"
+            android:textSize="12dp"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbPriority3"
+            android:id="@+id/rbPriority3"
+            android:textColor="@android:color/black"
+            android:textSize="12dp"
+            android:onClick="onRadioButtonClicked"/>
+    </RadioGroup>
+
 </RelativeLayout>

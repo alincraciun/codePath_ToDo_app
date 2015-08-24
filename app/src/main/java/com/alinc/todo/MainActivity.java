@@ -4,29 +4,28 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> items;
-    private ArrayAdapter<String> itemsAdapter;
+    private ArrayList<TodoItemDatabase.ToDoItem> todoList;
+    private ToDoItemAdapter todoAdapter;
+
     private ListView lvItems;
     private static final int REQUEST_CODE = 200;
-
-    //private static final String DATABASE_NAME = "ToDo.db";
-    //private static final int DATABASE_VERSION = 2;
+    private TodoItemDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayUseLogoEnabled(true);
         }
         lvItems = (ListView) findViewById(R.id.lvItems);
-        //items = new ArrayList<String>();
         readItems();
-        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
-        lvItems.setAdapter(itemsAdapter);
+        todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
+        lvItems.setAdapter(todoAdapter);
+
         setupListViewListener();
         setupEditListener();
     }
@@ -52,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
-                        items.remove(pos);
-                        itemsAdapter.notifyDataSetChanged();
-                        writeItems();
+                        db.deleteItem(todoList.get(pos));
+                        todoList.remove(pos);
+                        todoAdapter.notifyDataSetChanged();
                         return true;
                     }
                 }
@@ -69,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                         i.putExtra("pos", pos);
                         i.putExtra("id", id);
-                        i.putExtra("currentItemText", items.get(pos).toString());
+                        i.putExtra("itemText", todoList.get(pos).description);
+                        i.putExtra("itemId", Integer.toString(todoList.get(pos).id));
+                        i.putExtra("priority", Integer.toString(todoList.get(pos).priority));
                         startActivityForResult(i, REQUEST_CODE);
                     }
                 }
@@ -77,22 +78,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
         try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            items = new ArrayList<String>();
-        }
-    }
-
-    public void writeItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        } catch (IOException e) {
-            e.printStackTrace();
+            db = TodoItemDatabase.getInstance(this);
+            todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
+            todoList.addAll(db.getAllItems());
+        } catch (Exception e) {
+            todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
         }
     }
 
@@ -121,17 +112,30 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
+        TodoItemDatabase.ToDoItem newItem = db.getItem();
+        Date today = Calendar.getInstance().getTime();
         etNewItem.setText("");
-        writeItems();
+        newItem.description = itemText;
+        newItem.priority = 3;
+        newItem.action = "add";
+        newItem.dueDate = today;
+        todoAdapter.add(newItem);
+        todoAdapter.notifyDataSetChanged();
+        db.addOrUpdateItem(newItem);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            items.set(data.getExtras().getInt("position"), data.getExtras().getString("updateItemText"));
-            itemsAdapter.notifyDataSetChanged();
-            writeItems();
+            TodoItemDatabase.ToDoItem editItem = db.getItem();
+            editItem.description = data.getExtras().getString("updateItemText");
+            editItem.priority = data.getExtras().getInt("priority");
+            editItem.id = Integer.parseInt(data.getExtras().getString("itemId").toString());
+            editItem.action = "update";
+            editItem.dueDate = new Date();
+            todoList.set(data.getExtras().getInt("position"), editItem);
+            todoAdapter.notifyDataSetChanged();
+            db.addOrUpdateItem(editItem);
         }
     }
 }

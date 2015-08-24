@@ -64,3 +64,10 @@ local.properties
 
 # PDT-specific
 .buildpath
+*.iml
+
+app/app.iml
+
+*.iml
+
+*.iml
