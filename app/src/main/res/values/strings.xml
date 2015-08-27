@@ -8,5 +8,6 @@
     <string name="rbPriority1">Life Matter</string>
     <string name="rbPriority2">Get it done!</string>
     <string name="rbPriority3">Just Do It</string>
+    <string name="tvDueDate">Due Date</string>
 
 </resources>

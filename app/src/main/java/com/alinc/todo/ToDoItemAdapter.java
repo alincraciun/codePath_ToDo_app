@@ -30,24 +30,20 @@ public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
         }
 
         if(item != null) {
+            SimpleDateFormat date = new SimpleDateFormat("MMM d");
             TextView tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             TextView tvDueDate = (TextView) convertView.findViewById(R.id.tvDueDate);
             tvDescription.setText(item.description);
+            tvDueDate.setText(date.format(new Date(item.dueDate)));
 
-            SimpleDateFormat date = new SimpleDateFormat("MMM dd");
-            if(item.dueDate != null)
-                tvDueDate.setText(date.format(item.dueDate));
-            else
-                tvDueDate.setText(date.format(new Date()));
-
-            if(item.priority == 1) {
-                tvDescription.setTextColor(Color.RED);
+            if(item.priority == CommonConstants.HIGH_PRIORITY) {
+                tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.high_priority));
             }
-            else if (item.priority == 2) {
-                tvDescription.setTextColor(Color.rgb(255,69,0));
+            else if (item.priority == CommonConstants.ELEVATED_PRIORITY) {
+                tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.elevated_priority));
             }
             else {
-                tvDescription.setTextColor(Color.BLACK);
+                tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.standard_priority));
             }
         }
 

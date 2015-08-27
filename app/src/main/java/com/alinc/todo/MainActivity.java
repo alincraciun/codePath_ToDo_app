@@ -12,11 +12,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvItems;
     private static final int REQUEST_CODE = 200;
     private TodoItemDatabase db;
+    //public static final String TAG = getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +48,14 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
-                        db.deleteItem(todoList.get(pos));
-                        todoList.remove(pos);
-                        todoAdapter.notifyDataSetChanged();
-                        return true;
+                        boolean deleted = db.deleteItem(todoList.get(pos));
+                        if(deleted) {
+                            todoList.remove(pos);
+                            todoAdapter.notifyDataSetChanged();
+                            return true;
+                        }
+                        Log.d(getClass().getName(), "Failed to delete item!");
+                        return false;
                     }
                 }
         );
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         i.putExtra("itemText", todoList.get(pos).description);
                         i.putExtra("itemId", Integer.toString(todoList.get(pos).id));
                         i.putExtra("priority", Integer.toString(todoList.get(pos).priority));
+                        i.putExtra("dueDate", todoList.get(pos).dueDate);
                         startActivityForResult(i, REQUEST_CODE);
                     }
                 }
@@ -80,9 +82,14 @@ public class MainActivity extends AppCompatActivity {
     private void readItems() {
         try {
             db = TodoItemDatabase.getInstance(this);
+        } catch (Exception e) {
+            Log.d(getClass().getName(), "Unable to get database instance!");
+        }
+        if(db != null) {
             todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
             todoList.addAll(db.getAllItems());
-        } catch (Exception e) {
+        }
+        else {
             todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
         }
     }
@@ -113,15 +120,20 @@ public class MainActivity extends AppCompatActivity {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
         TodoItemDatabase.ToDoItem newItem = db.getItem();
-        Date today = Calendar.getInstance().getTime();
         etNewItem.setText("");
         newItem.description = itemText;
-        newItem.priority = 3;
-        newItem.action = "add";
-        newItem.dueDate = today;
-        todoAdapter.add(newItem);
-        todoAdapter.notifyDataSetChanged();
-        db.addOrUpdateItem(newItem);
+        newItem.priority = CommonConstants.STANDARD_PRIORITY;
+        newItem.action = CommonConstants.insertRecord;
+        newItem.dueDate = System.currentTimeMillis();
+        long id = db.addOrUpdateItem(newItem);
+        if(id > -1) {
+            todoAdapter.add(newItem);
+            todoAdapter.notifyDataSetChanged();
+        }
+        else {
+            Log.d(getClass().getName(), "Unable to add item.");
+        }
+
     }
 
     @Override
@@ -131,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
             editItem.description = data.getExtras().getString("updateItemText");
             editItem.priority = data.getExtras().getInt("priority");
             editItem.id = Integer.parseInt(data.getExtras().getString("itemId").toString());
-            editItem.action = "update";
-            editItem.dueDate = new Date();
+            editItem.dueDate = data.getExtras().getLong("dueDate");
+            editItem.action = CommonConstants.updateRecord;
             todoList.set(data.getExtras().getInt("position"), editItem);
             todoAdapter.notifyDataSetChanged();
             db.addOrUpdateItem(editItem);

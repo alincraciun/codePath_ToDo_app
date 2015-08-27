@@ -39,19 +39,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:autoText="false"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/tvPriorityLabel">
+        android:layout_below="@+id/tvPriorityLabel"
+        android:id="@+id/radioGroup">
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rbPriority1"
             android:id="@+id/rbPriority1"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/high_priority"
             android:textSize="12dp"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton
@@ -59,7 +60,7 @@
             android:layout_height="wrap_content"
             android:text="@string/rbPriority2"
             android:id="@+id/rbPriority2"
-            android:textColor="#ff4500"
+            android:textColor="@color/elevated_priority"
             android:textSize="12dp"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton
@@ -67,9 +68,33 @@
             android:layout_height="wrap_content"
             android:text="@string/rbPriority3"
             android:id="@+id/rbPriority3"
-            android:textColor="@android:color/black"
+            android:textColor="@color/standard_priority"
             android:textSize="12dp"
             android:onClick="onRadioButtonClicked"/>
     </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/tvDueDate"
+        android:id="@+id/tvDueDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="14sp"
+        android:layout_below="@+id/radioGroup"
+        android:paddingTop="14dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btCalendar"
+        android:onClick="showDatePickerDialog"
+        android:background="#00000000"
+        android:textSize="14sp"
+        android:layout_below="@+id/radioGroup"
+        android:layout_toRightOf="@+id/btSave"
+        android:layout_toEndOf="@+id/btSave" />
+
 
 </RelativeLayout>

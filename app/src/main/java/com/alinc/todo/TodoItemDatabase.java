@@ -7,9 +7,7 @@ import android.util.Log;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +17,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
 
     private static TodoItemDatabase sInstance;
     private static final String DATABASE_NAME = "toDo.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String TABLE_TODO = "ACTIVITIES";
     private static final String KEY_DESCRIPTION = "DESCRIPTION";
@@ -46,9 +44,9 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_DESCRIPTION + " TEXT,"
                 + KEY_PRIORITY + " INTEGER,"
-                + KEY_CREATED_DATE + " DATE,"
-                + KEY_DUE_DATE + " DATE,"
-                + KEY_MODIFIED_DATE + " DATE"
+                + KEY_CREATED_DATE + " INTEGER DEFAULT (strftime('%s','now')), "
+                + KEY_DUE_DATE + " INTEGER DEFAULT (strftime('%s','now')), "
+                + KEY_MODIFIED_DATE + " INTEGER DEFAULT (strftime('%s','now'))"
                 + ");");
     }
 
@@ -64,31 +62,30 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
         public int id;
         public String description;
         public int priority;
-        public Date dueDate;
-        public Date modifiedDate;
-        public Date createdDate;
+        public long dueDate;
+        public long modifiedDate;
+        public long createdDate;
         public String action;
 
     }
 
     public long addOrUpdateItem(ToDoItem toDoItem) {
         SQLiteDatabase db = getWritableDatabase();
-        SimpleDateFormat toDate = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         long id = -1;
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
             values.put(KEY_DESCRIPTION, toDoItem.description);
             values.put(KEY_PRIORITY, toDoItem.priority);
-            values.put(KEY_DUE_DATE, toDate.format(toDoItem.dueDate));
-            values.put(KEY_MODIFIED_DATE, toDate.format(new Date()));
+            values.put(KEY_DUE_DATE, toDoItem.dueDate);
+            values.put(KEY_MODIFIED_DATE, System.currentTimeMillis());
 
-            if(toDoItem.action.contentEquals("add")) {
-                values.put(KEY_CREATED_DATE, toDate.format(new Date()));
+            if(toDoItem.action.contentEquals(CommonConstants.insertRecord)) {
+                values.put(KEY_CREATED_DATE, System.currentTimeMillis());
                 id = db.insertOrThrow(TABLE_TODO, null, values);
                 db.setTransactionSuccessful();
             }
-            else if (toDoItem.action.contentEquals("update")) {
+            else if (toDoItem.action.contentEquals(CommonConstants.updateRecord)) {
                 id = db.update(TABLE_TODO, values, KEY_ID + " = ?", new String[] {Integer.toString(toDoItem.id)});
                 db.setTransactionSuccessful();
             }
@@ -100,18 +97,20 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
         return id;
     }
 
-    public void deleteItem(ToDoItem toDoItem) {
+    public boolean deleteItem(ToDoItem toDoItem) {
         SQLiteDatabase db = getWritableDatabase();
-        System.out.print("To be deleted: " + toDoItem.description + " - " + toDoItem.id);
         db.beginTransaction();
         try {
             db.delete(TABLE_TODO, KEY_ID + " = ?", new String[]{Integer.toString(toDoItem.id)});
             db.setTransactionSuccessful();
+            return true;
         } catch (Exception e) {
             Log.d("ERROR: ", "Error while trying to delete item record. " + e);
         } finally {
             db.endTransaction();
         }
+
+        return false;
     }
 
     public List<ToDoItem> getAllItems() {
@@ -119,8 +118,9 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
 
         String items_select_all = String.format("SELECT * FROM %s", TABLE_TODO);
         SQLiteDatabase db = getReadableDatabase();
+        if(db == null)
+            return null;
         Cursor c = db.rawQuery(items_select_all, null);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             if(c.moveToFirst()) {
@@ -129,15 +129,15 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
                     newItem.description = c.getString(c.getColumnIndex(KEY_DESCRIPTION));
                     newItem.id = c.getInt(c.getColumnIndex(KEY_ID));
                     newItem.priority = c.getInt(c.getColumnIndex(KEY_PRIORITY));
-                    newItem.modifiedDate = dateFormat.parse(c.getString(c.getColumnIndex(KEY_MODIFIED_DATE)));
-                    newItem.dueDate = dateFormat.parse(c.getString(c.getColumnIndex(KEY_DUE_DATE)));
-                    newItem.createdDate = dateFormat.parse(c.getString(c.getColumnIndex(KEY_CREATED_DATE)));
+                    newItem.modifiedDate = c.getLong(c.getColumnIndex(KEY_MODIFIED_DATE));
+                    newItem.dueDate = c.getLong(c.getColumnIndex(KEY_DUE_DATE));
+                    newItem.createdDate = c.getLong(c.getColumnIndex(KEY_CREATED_DATE));
                     items.add(newItem);
                 } while (c.moveToNext());
             }
 
         } catch (Exception e) {
-
+            Log.d(getClass().getName(), "Exception caught while parsing cursor: " + e);
         } finally {
             if(c != null && !c.isClosed())
                 c.close();
