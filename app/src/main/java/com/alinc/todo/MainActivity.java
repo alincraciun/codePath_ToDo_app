@@ -127,7 +127,10 @@ public class MainActivity extends AppCompatActivity {
         newItem.dueDate = System.currentTimeMillis();
         long id = db.addOrUpdateItem(newItem);
         if(id > -1) {
-            todoAdapter.add(newItem);
+            //todoAdapter.add(newItem);
+            readItems();
+            todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
+            lvItems.setAdapter(todoAdapter);
             todoAdapter.notifyDataSetChanged();
         }
         else {
@@ -145,9 +148,11 @@ public class MainActivity extends AppCompatActivity {
             editItem.id = Integer.parseInt(data.getExtras().getString("itemId").toString());
             editItem.dueDate = data.getExtras().getLong("dueDate");
             editItem.action = CommonConstants.updateRecord;
-            todoList.set(data.getExtras().getInt("position"), editItem);
-            todoAdapter.notifyDataSetChanged();
             db.addOrUpdateItem(editItem);
+            readItems();
+            todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
+            lvItems.setAdapter(todoAdapter);
+            todoAdapter.notifyDataSetChanged();
         }
     }
 }

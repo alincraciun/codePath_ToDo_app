@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -116,7 +117,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
     public List<ToDoItem> getAllItems() {
         List<ToDoItem> items = new ArrayList<>();
 
-        String items_select_all = String.format("SELECT * FROM %s", TABLE_TODO);
+        String items_select_all = String.format("SELECT * FROM %s ORDER BY " + KEY_DUE_DATE + " DESC", TABLE_TODO);
         SQLiteDatabase db = getReadableDatabase();
         if(db == null)
             return null;
@@ -149,6 +150,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
     public ToDoItem getItem() {
         return new ToDoItem();
     }
+
 }
 
 

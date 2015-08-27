@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvSpace"
-        android:text="  "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvDueDate"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textAlignment="gravity"
-        android:gravity="right"
-        android:layout_gravity="right" />
-</LinearLayout>
+        android:orientation="vertical"
+        android:shrinkColumns="0"
+        android:stretchColumns="0"
+        android:id="@+id/summaryTable">
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="3">
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:interpolator="@android:anim/accelerate_interpolator"
+                android:duration="600"
+                android:repeatMode="reverse"
+                android:repeatCount="infinite"/>
+            <TextView
+                android:id="@+id/tvSpace"
+                android:text="  "
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/tvDueDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textAlignment="gravity"
+                android:gravity="right"
+                android:layout_gravity="right" />
+        </TableRow>
+
+    </TableLayout>
+</RelativeLayout>

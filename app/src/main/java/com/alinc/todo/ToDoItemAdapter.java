@@ -1,13 +1,14 @@
 package com.alinc.todo;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
             tvDescription.setText(item.description);
             tvDueDate.setText(date.format(new Date(item.dueDate)));
 
+            if(isToday(item.dueDate)) {
+                tvDueDate.setTypeface(null, Typeface.BOLD);
+                tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.high_priority));
+            }
             if(item.priority == CommonConstants.HIGH_PRIORITY) {
                 tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.high_priority));
             }
@@ -48,5 +53,15 @@ public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
         }
 
         return convertView;
+    }
+
+    public static boolean isToday (long dueDate) {
+        Calendar today = Calendar.getInstance();
+        Calendar due = Calendar.getInstance();
+        due.setTimeInMillis(dueDate);
+        if(today.get(Calendar.YEAR) == due.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == due.get(Calendar.DAY_OF_YEAR))
+            return true;
+        else
+            return false;
     }
 }
