@@ -1,15 +1,28 @@
 package com.alinc.todo;
 
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
-public class EditItemActivity extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+public class EditItemActivity extends AppCompatActivity
+        implements DatePickerDialog.OnDateSetListener {
+    private int itemPriority;
+    private long dueDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +35,33 @@ public class EditItemActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayUseLogoEnabled(true);
         }
         EditText editItem = (EditText)findViewById(R.id.etEditItem);
-        editItem.setText(getIntent().getStringExtra("currentItemText"));
+        editItem.setText(getIntent().getStringExtra("itemText"));
         editItem.setSelection(editItem.getText().length());
+
+        SimpleDateFormat date = new SimpleDateFormat("MM/d/yyyy");
+        dueDate = getIntent().getLongExtra("dueDate", System.currentTimeMillis());
+        Button dueDateText = (Button)findViewById(R.id.btCalendar);
+        dueDateText.setText(date.format(new Date(dueDate)));
+
+        itemPriority = Integer.parseInt(getIntent().getStringExtra("priority"));
+
+        if(itemPriority == CommonConstants.STANDARD_PRIORITY) {
+            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority3);
+            radioButton.performClick();
+            editItem.setTextColor(editItem.getResources().getColor(R.color.standard_priority));
+
+        }
+        else if (itemPriority == CommonConstants.ELEVATED_PRIORITY) {
+            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority2);
+            radioButton.performClick();
+            editItem.setTextColor(editItem.getResources().getColor(R.color.elevated_priority));
+        }
+        else {
+            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority1);
+            radioButton.performClick();
+            editItem.setTextColor(editItem.getResources().getColor(R.color.high_priority));
+        }
+
     }
 
     @Override
@@ -51,11 +89,54 @@ public class EditItemActivity extends AppCompatActivity {
     public void onSubmit(View v) {
         EditText etUpdateItem = (EditText) findViewById(R.id.etEditItem);
         Intent data = new Intent();
+
         data.putExtra("updateItemText", etUpdateItem.getText().toString());
         data.putExtra("position", getIntent().getExtras().getInt("pos"));
         data.putExtra("id", getIntent().getExtras().getLong("id"));
+        data.putExtra("priority", itemPriority);
+        data.putExtra("itemId", getIntent().getStringExtra("itemId"));
+        data.putExtra("dueDate", dueDate);
 
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        EditText editItem = (EditText)findViewById(R.id.etEditItem);
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.rbPriority3:
+                if (checked) {
+                    itemPriority = CommonConstants.STANDARD_PRIORITY;
+                    editItem.setTextColor(editItem.getResources().getColor(R.color.standard_priority)); }
+                    break;
+            case R.id.rbPriority2:
+                if (checked) {
+                    itemPriority = CommonConstants.ELEVATED_PRIORITY;
+                    editItem.setTextColor(editItem.getResources().getColor(R.color.elevated_priority)); }
+                    break;
+            case R.id.rbPriority1:
+                if (checked) {
+                    itemPriority = CommonConstants.HIGH_PRIORITY;
+                    editItem.setTextColor(editItem.getResources().getColor(R.color.high_priority)); }
+                break;
+        }
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+
+        Button dueDateText = (Button)findViewById(R.id.btCalendar);
+        dueDateText.setText((month + 1) + "/" + day + "/" + year);
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.clear();
+        gc.set(year, month, day);
+        dueDate = gc.getTimeInMillis();
     }
 }
