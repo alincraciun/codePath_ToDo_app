@@ -39,7 +39,7 @@ Here's a walkthrough of implemented user stories:
 
 <img src='resources/raw/todo_userStory3.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' />
 
-* Setting a due date and a priority
+* Setting a due date and priority. Tap the item you want to update. In the 'Edit Item' screen you can select a priority from the 3 options available. 'Life Matter' has the higest priority and is highlighted in red color. Lowest or standard priority items has black color and it's default when an item is added. You can set an item due date by taping the default due date and selecting a new date in the date picker window. 
 
 <img src='resources/raw/todo_userStory4.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' /> 
 
