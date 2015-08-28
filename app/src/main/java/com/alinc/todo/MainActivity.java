@@ -85,12 +85,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(getClass().getName(), "Unable to get database instance!");
         }
+        todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
         if(db != null) {
-            todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
             todoList.addAll(db.getAllItems());
-        }
-        else {
-            todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
         }
     }
 
