@@ -4,7 +4,7 @@
 
 Submitted by: Alin Craciun
 
-Time spent: 4 hours spent in total
+Time spent: 16 hours spent in total
 
 ## User Stories
 
@@ -39,7 +39,7 @@ Here's a walkthrough of implemented user stories:
 
 <img src='resources/raw/todo_userStory3.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' />
 
-* Setting a due date and priority. Tap the item you want to update. In the 'Edit Item' screen you can select a priority from the 3 options available. 'Life Matter' has the higest priority and is highlighted in red color. Lowest or standard priority items has black color and it's default when an item is added. You can set an item due date by taping the default due date and selecting a new date in the date picker window. 
+* Setting a due date and priority. Tap the item you want to update. In the 'Edit Item' screen you can select a priority from the 3 options available. 'Life Matter' has the higest priority and is highlighted in red color. Lowest or standard priority items has black color and it's default when an item is added. You can set an item due date by taping the default due date and selecting a new date in the date picker window. You can scroll through the calendar months by swiping up and down. To change the year, tap the current year displayed in the calendar.
 
 <img src='resources/raw/todo_userStory4.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' /> 
 
@@ -47,7 +47,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Logging was not consistent or I couldn't find the right way to ouput messages to the output console. Tried 'Log.d' and 'System.out.print' but messages didn't come through consistently.
 
 ## License
 
