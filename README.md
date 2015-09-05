@@ -21,7 +21,7 @@ The following optional features are implemented:
 * [x] Add support for completion due dates for todo items (and display within listview item)
 * [x] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [x] Add support for selecting the priority of each todo item (and display in listview item)
-* [ ] Tweak the style improving the UI / UX, play with colors, images or backgrounds
+* [x] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
 ## Video Walkthrough 
 
@@ -42,7 +42,15 @@ Here's a walkthrough of implemented user stories:
 * Setting a due date and priority. Tap the item you want to update. In the 'Edit Item' screen you can select a priority from the 3 options available. 'Life Matter' has the higest priority and is highlighted in red color. Lowest or standard priority items has black color and it's default when an item is added. You can set an item due date by taping the default due date and selecting a new date in the date picker window. You can scroll through the calendar months by swiping up and down. To change the year, tap the current year displayed in the calendar.
 Item list is sorted by due date in descending order. Items with a due date on the current date have the date highlighted in red and bold style.
 
-<img src='resources/raw/todo_userStory4.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' /> 
+<img src='resources/raw/todo_userStory4.gif' title='Video Walkthrough' width='50%' alt='Priorities - Video Walkthrough' /> 
+
+* Settings options allows you to filter out older items, delete them or start a fresh list by deleting everything. 
+
+<img src='resources/raw/todo_userStory5.gif' title='Video Walkthrough' width='50%' alt='Preferences - Video Walkthrough' /> 
+
+* An action bar item allows you to quickly view only the items that are due for current day. Click the calendar icon to enable the today filter, icon color will change to red. To disable the filter click the same calendar icon again. 
+
+<img src='resources/raw/todo_userStory6.gif' title='Video Walkthrough' width='50%' alt='Quick Filter - Video Walkthrough' /> 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
