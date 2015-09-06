@@ -13,7 +13,10 @@
         android:onClick="onAddItem"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textStyle="normal"
+        android:textAllCaps="false"
+        android:enabled="false" />
 
     <EditText
         android:layout_width="wrap_content"

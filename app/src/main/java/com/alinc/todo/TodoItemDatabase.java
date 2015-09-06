@@ -2,13 +2,14 @@ package com.alinc.todo;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -19,6 +20,9 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
     private static TodoItemDatabase sInstance;
     private static final String DATABASE_NAME = "toDo.db";
     private static final int DATABASE_VERSION = 3;
+    private Context appContext;
+    private static SharedPreferences sharedPreferences;
+
 
     private static final String TABLE_TODO = "ACTIVITIES";
     private static final String KEY_DESCRIPTION = "DESCRIPTION";
@@ -27,6 +31,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
     private static final String KEY_CREATED_DATE = "CREATED_DATE";
     private static final String KEY_DUE_DATE = "DUE_DATE";
     private static final String KEY_MODIFIED_DATE = "MODIFIED_DATE";
+    public boolean today = false;
 
     public static synchronized TodoItemDatabase getInstance(Context context) {
         if (sInstance == null) {
@@ -37,6 +42,8 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
 
     private TodoItemDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.appContext = context;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
     }
 
     @Override
@@ -114,10 +121,57 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
         return false;
     }
 
+    public int deleteOldItems() {
+        int i;
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            i = db.delete(TABLE_TODO, "(strftime('%j', 'now', 'localtime') - strftime('%j', datetime(" + KEY_DUE_DATE + "/1000, 'unixepoch', 'localtime'))) > 0", null);
+            db.setTransactionSuccessful();
+            return i;
+        } catch (Exception e) {
+            Log.d("ERROR: ", "Error while trying to delete past due records. " + e);
+        } finally {
+            db.endTransaction();
+        }
+
+        return -1;
+    }
+
+    public boolean deleteAllItems() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_TODO, null, null);
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            Log.d("ERROR: ", "Error while trying to delete records. " + e);
+        } finally {
+            db.endTransaction();
+        }
+
+        return false;
+    }
+
+    public boolean hideOldItems() {
+        return sharedPreferences.getBoolean(CommonConstants.HIDE_OLD_ITEMS, false);
+    }
+
     public List<ToDoItem> getAllItems() {
         List<ToDoItem> items = new ArrayList<>();
+        String items_select_all;
 
-        String items_select_all = String.format("SELECT * FROM %s ORDER BY " + KEY_DUE_DATE + " DESC", TABLE_TODO);
+        if(today) {
+            items_select_all = ("SELECT * FROM " + TABLE_TODO + " WHERE " + " (strftime('%j', 'now','localtime') - strftime('%j', datetime(" + KEY_DUE_DATE + "/1000, 'unixepoch', 'localtime'))) = 0 " + " ORDER BY " + KEY_DUE_DATE + " DESC");
+        }
+        else if(hideOldItems()) {
+            items_select_all = ("SELECT * FROM " + TABLE_TODO + " WHERE " + " (strftime('%j', 'now', 'localtime') - strftime('%j', datetime(" + KEY_DUE_DATE + "/1000, 'unixepoch', 'localtime'))) < 3 " + " ORDER BY " + KEY_DUE_DATE + " DESC");
+        }
+        else {
+            items_select_all = String.format("SELECT * FROM %s ORDER BY " + KEY_DUE_DATE + " DESC", TABLE_TODO);
+        }
+
         SQLiteDatabase db = getReadableDatabase();
         if(db == null)
             return null;
@@ -152,8 +206,3 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
     }
 
 }
-
-
-
-
-

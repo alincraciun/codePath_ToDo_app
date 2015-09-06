@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/preferences_title">
+
+        <CheckBoxPreference
+            android:key="cb_pref_oldItems"
+            android:title="@string/oldItems_preference"
+            android:defaultValue="false"/>
+
+        <CheckBoxPreference
+            android:key="cb_pref_deleteOldItems"
+            android:title="@string/deleteOldItems_preference"
+            android:defaultValue="false"/>
+
+        <Preference
+            android:title="Delete All!"
+            android:key="btDeleteAll"
+            android:icon="@drawable/ic_delete">
+        </Preference>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

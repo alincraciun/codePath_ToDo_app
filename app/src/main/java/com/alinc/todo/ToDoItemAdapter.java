@@ -37,8 +37,12 @@ public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
             tvDescription.setText(item.description);
             tvDueDate.setText(date.format(new Date(item.dueDate)));
 
+            tvDescription.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "daniel.ttf"));
+            tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"));
+
             if(isToday(item.dueDate)) {
-                tvDueDate.setTypeface(null, Typeface.BOLD);
+                tvDescription.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"), Typeface.BOLD);
+                tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"), Typeface.BOLD);
                 tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.high_priority));
             }
             if(item.priority == CommonConstants.HIGH_PRIORITY) {

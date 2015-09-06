@@ -1,16 +1,22 @@
 package com.alinc.todo;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -20,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private ToDoItemAdapter todoAdapter;
 
     private ListView lvItems;
-    private static final int REQUEST_CODE = 200;
+    public static final int REQUEST_CODE = 200;
+    public static final int REFRESH_REQUEST = 999;
     private TodoItemDatabase db;
-    //public static final String TAG = getClass().getName();
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +43,32 @@ public class MainActivity extends AppCompatActivity {
         }
         lvItems = (ListView) findViewById(R.id.lvItems);
         readItems();
-        todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
-        lvItems.setAdapter(todoAdapter);
+
+        final TextView tvNewItem = (TextView) findViewById(R.id.etNewItem);
+        tvNewItem.setTypeface(Typeface.createFromAsset(getAssets(), "daniel.ttf"));
+        final Button addButton = (Button) findViewById(R.id.btnAddItem);
+
+        tvNewItem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(tvNewItem.getText().toString().length() == 0)
+                    addButton.setEnabled(false);
+                else
+                    addButton.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
 
         setupListViewListener();
         setupEditListener();
@@ -49,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
                         boolean deleted = db.deleteItem(todoList.get(pos));
-                        if(deleted) {
+                        if (deleted) {
                             todoList.remove(pos);
                             todoAdapter.notifyDataSetChanged();
                             return true;
@@ -89,28 +120,63 @@ public class MainActivity extends AppCompatActivity {
         if(db != null) {
             todoList.addAll(db.getAllItems());
         }
+        todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
+        lvItems.setAdapter(todoAdapter);
+        todoAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_preferences:
+                openPreferences();
+                return true;
+            case R.id.action_today_filter:
+                todayFilter(item);
+                return true;
+            case R.id.action_settings:
+                openSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openPreferences() {
+        Intent intent = new Intent();
+        intent.setClassName(this, "com.alinc.todo.SettingsActivity");
+        startActivityForResult(intent, REFRESH_REQUEST);
+    }
+
+    private void todayFilter(MenuItem item) {
+
+        if(item.isChecked()) {
+            item.setChecked(false);
+            item.setIcon(R.drawable.ic_action_today0);
+            db.today = false;
+            readItems();
+        }
+        else {
+            item.setChecked(true);
+            item.setIcon(R.drawable.ic_action_today1);
+            item.setTitle("Today");
+            db.today = true;
+            readItems();
         }
 
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void openSettings() {
+       // SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     public void onAddItem(View v) {
@@ -126,9 +192,6 @@ public class MainActivity extends AppCompatActivity {
         if(id > -1) {
             //todoAdapter.add(newItem);
             readItems();
-            todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
-            lvItems.setAdapter(todoAdapter);
-            todoAdapter.notifyDataSetChanged();
         }
         else {
             Log.d(getClass().getName(), "Unable to add item.");
@@ -147,9 +210,9 @@ public class MainActivity extends AppCompatActivity {
             editItem.action = CommonConstants.updateRecord;
             db.addOrUpdateItem(editItem);
             readItems();
-            todoAdapter = new ToDoItemAdapter(this, android.R.layout.simple_list_item_1, todoList);
-            lvItems.setAdapter(todoAdapter);
-            todoAdapter.notifyDataSetChanged();
+        }
+        else if(resultCode == RESULT_OK && requestCode == REFRESH_REQUEST) {
+            readItems();
         }
     }
 }
