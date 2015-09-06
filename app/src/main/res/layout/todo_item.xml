@@ -21,7 +21,7 @@
                 android:interpolator="@android:anim/accelerate_interpolator"
                 android:duration="600"
                 android:repeatMode="reverse"
-                android:repeatCount="infinite"/>
+                android:repeatCount="infinite" />
             <TextView
                 android:id="@+id/tvSpace"
                 android:text="  "

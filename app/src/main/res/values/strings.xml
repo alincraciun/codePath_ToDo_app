@@ -9,5 +9,11 @@
     <string name="rbPriority2">Get it done!</string>
     <string name="rbPriority3">Just Do It</string>
     <string name="tvDueDate">Due Date</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="oldItems_preference">Hide Items older than 3 days</string>
+    <string name="default_checkbox_preference">true</string>
+    <string name="deleteOldItems_preference">Delete all past due items</string>
+    <string name="delete_all">Delete All!</string>
+    <string name="today">Today</string>
 
 </resources>
