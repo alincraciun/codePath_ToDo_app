@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory>
+        <ListPreference
+            android:key="lp_font"
+            android:title="@string/item_font"
+            android:summary="ABC 123"
+            android:entries="@array/fontList"
+            android:entryValues="@array/fontValues"
+            android:defaultValue="daniel.ttf"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

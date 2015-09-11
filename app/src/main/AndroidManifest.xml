@@ -27,6 +27,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.alinc.todo.MainActivity" />
         </activity>
+        <activity
+            android:name=".ConfigurationsActivity"
+            android:label="Configurations"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.alinc.todo.MainActivity"/>
+        </activity>
+
     </application>
 
 </manifest>

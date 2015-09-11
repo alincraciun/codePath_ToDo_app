@@ -15,5 +15,6 @@
     <string name="deleteOldItems_preference">Delete all past due items</string>
     <string name="delete_all">Delete All!</string>
     <string name="today">Today</string>
+    <string name="item_font">Item Font</string>
 
 </resources>
