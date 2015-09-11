@@ -38,21 +38,25 @@ public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
             tvDueDate.setText(date.format(new Date(item.dueDate)));
 
             tvDescription.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "daniel.ttf"));
-            tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"));
+            tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "daniel.ttf"));
 
             if(isToday(item.dueDate)) {
                 tvDescription.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"), Typeface.BOLD);
                 tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"), Typeface.BOLD);
-                tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.high_priority));
+                //tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.high_priority));
             }
             if(item.priority == CommonConstants.HIGH_PRIORITY) {
                 tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.high_priority));
+                tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.high_priority));
             }
             else if (item.priority == CommonConstants.ELEVATED_PRIORITY) {
                 tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.elevated_priority));
+                tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.elevated_priority));
             }
             else {
                 tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.standard_priority));
+                tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.standard_priority));
+
             }
         }
 

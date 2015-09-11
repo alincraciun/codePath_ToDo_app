@@ -32,6 +32,8 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
     private static final String KEY_DUE_DATE = "DUE_DATE";
     private static final String KEY_MODIFIED_DATE = "MODIFIED_DATE";
     public boolean today = false;
+    public final String TAG = getClass().getName();
+
 
     public static synchronized TodoItemDatabase getInstance(Context context) {
         if (sInstance == null) {
@@ -98,7 +100,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
                 db.setTransactionSuccessful();
             }
         } catch (Exception e) {
-            Log.d("ERROR: ", "Error while trying to update table. Exception is: " + e);
+            Log.e(TAG, "Error while trying to update table. Exception is: " + e);
         } finally {
             db.endTransaction();
         }
@@ -113,7 +115,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
             db.setTransactionSuccessful();
             return true;
         } catch (Exception e) {
-            Log.d("ERROR: ", "Error while trying to delete item record. " + e);
+            Log.e(TAG, "Error while trying to delete item record. " + e);
         } finally {
             db.endTransaction();
         }
@@ -130,7 +132,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
             db.setTransactionSuccessful();
             return i;
         } catch (Exception e) {
-            Log.d("ERROR: ", "Error while trying to delete past due records. " + e);
+            Log.e(TAG, "Error while trying to delete past due records. " + e);
         } finally {
             db.endTransaction();
         }
@@ -146,7 +148,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
             db.setTransactionSuccessful();
             return true;
         } catch (Exception e) {
-            Log.d("ERROR: ", "Error while trying to delete records. " + e);
+            Log.e(TAG, "Error while trying to delete records. " + e);
         } finally {
             db.endTransaction();
         }
@@ -192,7 +194,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper{
             }
 
         } catch (Exception e) {
-            Log.d(getClass().getName(), "Exception caught while parsing cursor: " + e);
+            Log.e(TAG, "Exception caught while parsing cursor: " + e);
         } finally {
             if(c != null && !c.isClosed())
                 c.close();

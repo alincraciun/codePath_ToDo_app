@@ -28,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvItems;
     public static final int REQUEST_CODE = 200;
     public static final int REFRESH_REQUEST = 999;
+    public static final int CONFIG_REQUEST = 900;
     private TodoItemDatabase db;
     private Menu menu;
+    public final String TAG = getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(tvNewItem.getText().toString().length() == 0)
+                if (tvNewItem.getText().toString().length() == 0)
                     addButton.setEnabled(false);
                 else
                     addButton.setEnabled(true);
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                             todoAdapter.notifyDataSetChanged();
                             return true;
                         }
-                        Log.d(getClass().getName(), "Failed to delete item!");
+                        Log.i(TAG, "Failed to delete item!");
                         return false;
                     }
                 }
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             db = TodoItemDatabase.getInstance(this);
         } catch (Exception e) {
-            Log.d(getClass().getName(), "Unable to get database instance!");
+            Log.e(TAG, "Unable to get database instance!");
         }
         todoList = new ArrayList<TodoItemDatabase.ToDoItem>();
         if(db != null) {
@@ -176,7 +178,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openSettings() {
-       // SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(this);
+       Intent intent = new Intent();
+       intent.setClassName(this, "com.alinc.todo.ConfigurationsActivity");
+        startActivityForResult(intent, CONFIG_REQUEST);
     }
 
     public void onAddItem(View v) {
@@ -192,9 +196,8 @@ public class MainActivity extends AppCompatActivity {
         if(id > -1) {
             //todoAdapter.add(newItem);
             readItems();
-        }
-        else {
-            Log.d(getClass().getName(), "Unable to add item.");
+        } else {
+            Log.i(TAG, "Unable to add item.");
         }
 
     }

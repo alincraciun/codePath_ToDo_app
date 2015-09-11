@@ -43,22 +43,22 @@ public class EditItemActivity extends AppCompatActivity
         dueDateText.setText(date.format(new Date(dueDate)));
 
         itemPriority = Integer.parseInt(getIntent().getStringExtra("priority"));
-
-        if(itemPriority == CommonConstants.STANDARD_PRIORITY) {
-            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority3);
-            radioButton.performClick();
-            editItem.setTextColor(editItem.getResources().getColor(R.color.standard_priority));
-
-        }
-        else if (itemPriority == CommonConstants.ELEVATED_PRIORITY) {
-            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority2);
-            radioButton.performClick();
-            editItem.setTextColor(editItem.getResources().getColor(R.color.elevated_priority));
-        }
-        else {
-            RadioButton radioButton = (RadioButton)findViewById(R.id.rbPriority1);
-            radioButton.performClick();
-            editItem.setTextColor(editItem.getResources().getColor(R.color.high_priority));
+        switch(itemPriority) {
+            case CommonConstants.STANDARD_PRIORITY: {
+                RadioButton radioButton = (RadioButton) findViewById(R.id.rbPriority3);
+                radioButton.performClick();
+                editItem.setTextColor(editItem.getResources().getColor(R.color.standard_priority));
+                break; }
+            case CommonConstants.ELEVATED_PRIORITY: {
+                RadioButton radioButton = (RadioButton) findViewById(R.id.rbPriority2);
+                radioButton.performClick();
+                editItem.setTextColor(editItem.getResources().getColor(R.color.elevated_priority));
+                break; }
+            case CommonConstants.HIGH_PRIORITY: {
+                RadioButton radioButton = (RadioButton) findViewById(R.id.rbPriority1);
+                radioButton.performClick();
+                editItem.setTextColor(editItem.getResources().getColor(R.color.high_priority));
+                break; }
         }
 
     }
