@@ -52,6 +52,14 @@ Item list is sorted by due date in descending order. Items with a due date on th
 
 <img src='resources/raw/todo_userStory6.gif' title='Video Walkthrough' width='50%' alt='Quick Filter - Video Walkthrough' /> 
 
+* In the application 'Settings' option user can change the item display font 
+
+<img src='resources/raw/todo_userStory7.gif' title='Video Walkthrough' width='50%' alt='Quick Filter - Video Walkthrough' /> 
+
+* In the application 'Settings' option user can change the priority names
+
+<img src='resources/raw/todo_userStory8.gif' title='Video Walkthrough' width='50%' alt='Quick Filter - Video Walkthrough' /> 
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
