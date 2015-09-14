@@ -1,6 +1,7 @@
 package com.alinc.todo;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -28,15 +29,18 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvItems;
     public static final int REQUEST_CODE = 200;
     public static final int REFRESH_REQUEST = 999;
-    public static final int CONFIG_REQUEST = 900;
+    public static final int CONFIG_REQUEST = 100;
     private TodoItemDatabase db;
     private Menu menu;
     public final String TAG = getClass().getName();
+    private TextView tvNewItem;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -46,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         lvItems = (ListView) findViewById(R.id.lvItems);
         readItems();
 
-        final TextView tvNewItem = (TextView) findViewById(R.id.etNewItem);
-        tvNewItem.setTypeface(Typeface.createFromAsset(getAssets(), "daniel.ttf"));
+        tvNewItem = (TextView) findViewById(R.id.etNewItem);
+        tvNewItem.setTypeface(Typeface.createFromAsset(getAssets(), prefs.getString("lp_font", "daniel.ttf")));
         final Button addButton = (Button) findViewById(R.id.btnAddItem);
 
         tvNewItem.addTextChangedListener(new TextWatcher() {
@@ -214,8 +218,14 @@ public class MainActivity extends AppCompatActivity {
             db.addOrUpdateItem(editItem);
             readItems();
         }
-        else if(resultCode == RESULT_OK && requestCode == REFRESH_REQUEST) {
+        else if(resultCode == RESULT_OK && requestCode == REFRESH_REQUEST)
+         {
             readItems();
+        }
+        else if(resultCode == RESULT_OK && requestCode == CONFIG_REQUEST)
+        {
+            todoAdapter.notifyDataSetChanged();
+            tvNewItem.setTypeface(Typeface.createFromAsset(getAssets(), prefs.getString("lp_font", "daniel.ttf")));
         }
     }
 }

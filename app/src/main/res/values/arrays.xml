@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="fontList">
-        <item>Black Jack</item>
-        <item>Daniel</item>
-        <item>JR Hand</item>
-        <item>Kaushan</item>
+    <string-array name="priorityList">
+        <item>Highest</item>
+        <item>High</item>
+        <item>Default</item>
     </string-array>
-    <string-array name="fontValues">
-        <item>black_jack.ttf</item>
-        <item>daniel.ttf</item>
-        <item>jr_hand.ttf</item>
-        <item>KaushanScript-Regular.otf</item>
+    <string-array name="priorityValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>
