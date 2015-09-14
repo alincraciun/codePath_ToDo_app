@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory>
-        <ListPreference
+    <PreferenceCategory
+        android:title="Settings">
+        <com.alinc.todo.FontPreference
             android:key="lp_font"
-            android:title="@string/item_font"
-            android:summary="ABC 123"
-            android:entries="@array/fontList"
-            android:entryValues="@array/fontValues"
-            android:defaultValue="daniel.ttf"/>
+            android:title="@string/item_font"/>
+        <PreferenceScreen
+            android:key="prioritySettings"
+            android:title="Priorities">
+            <PreferenceCategory
+                android:title="Settings - Priorities">
+                <EditTextPreference
+                    android:key="priority_highest"
+                    android:title="Highest"
+                    android:defaultValue="Life Matter"
+                    android:summary="Life Matter"/>
+                <EditTextPreference
+                    android:key="priority_high"
+                    android:title="High"
+                    android:defaultValue="Get it done!"
+                    android:summary="Get it done!"/>
+                <EditTextPreference
+                    android:key="priority_default"
+                    android:title="Default"
+                    android:defaultValue="Just do it"
+                    android:summary="Just do it"/>
+            </PreferenceCategory>
+        </PreferenceScreen>
 
     </PreferenceCategory>
 </PreferenceScreen>

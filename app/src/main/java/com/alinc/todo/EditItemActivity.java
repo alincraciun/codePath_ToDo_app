@@ -3,6 +3,8 @@ package com.alinc.todo;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,11 +24,13 @@ public class EditItemActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener {
     private int itemPriority;
     private long dueDate;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -42,21 +46,27 @@ public class EditItemActivity extends AppCompatActivity
         Button dueDateText = (Button)findViewById(R.id.btCalendar);
         dueDateText.setText(date.format(new Date(dueDate)));
 
+        RadioButton radioButton3 = (RadioButton) findViewById(R.id.rbPriority3);
+        radioButton3.setText(prefs.getString("priority_default", "Just do it"));
+
+        RadioButton radioButton2 = (RadioButton) findViewById(R.id.rbPriority2);
+        radioButton2.setText(prefs.getString("priority_high", "Get it done!"));
+
+        RadioButton radioButton1 = (RadioButton) findViewById(R.id.rbPriority1);
+        radioButton1.setText(prefs.getString("priority_highest", "Life Matter"));
+
         itemPriority = Integer.parseInt(getIntent().getStringExtra("priority"));
         switch(itemPriority) {
             case CommonConstants.STANDARD_PRIORITY: {
-                RadioButton radioButton = (RadioButton) findViewById(R.id.rbPriority3);
-                radioButton.performClick();
+                radioButton3.performClick();
                 editItem.setTextColor(editItem.getResources().getColor(R.color.standard_priority));
                 break; }
             case CommonConstants.ELEVATED_PRIORITY: {
-                RadioButton radioButton = (RadioButton) findViewById(R.id.rbPriority2);
-                radioButton.performClick();
+                radioButton2.performClick();
                 editItem.setTextColor(editItem.getResources().getColor(R.color.elevated_priority));
                 break; }
             case CommonConstants.HIGH_PRIORITY: {
-                RadioButton radioButton = (RadioButton) findViewById(R.id.rbPriority1);
-                radioButton.performClick();
+                radioButton1.performClick();
                 editItem.setTextColor(editItem.getResources().getColor(R.color.high_priority));
                 break; }
         }

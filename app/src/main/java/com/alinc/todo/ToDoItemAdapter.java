@@ -1,7 +1,9 @@
 package com.alinc.todo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +20,11 @@ import java.util.ArrayList;
  */
 public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
 
+    private static SharedPreferences sharedPreferences;
 
     public ToDoItemAdapter(Context context, int textViewResourceId, ArrayList<TodoItemDatabase.ToDoItem> items) {
         super(context, textViewResourceId, items);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -32,18 +36,18 @@ public class ToDoItemAdapter extends ArrayAdapter<TodoItemDatabase.ToDoItem> {
 
         if(item != null) {
             SimpleDateFormat date = new SimpleDateFormat("MMM d");
+            Typeface preferedFont = Typeface.createFromAsset(getContext().getAssets(), sharedPreferences.getString("lp_font", "daniel.ttf"));
             TextView tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             TextView tvDueDate = (TextView) convertView.findViewById(R.id.tvDueDate);
             tvDescription.setText(item.description);
             tvDueDate.setText(date.format(new Date(item.dueDate)));
 
-            tvDescription.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "daniel.ttf"));
-            tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "daniel.ttf"));
+            tvDescription.setTypeface(preferedFont);
+            tvDueDate.setTypeface(preferedFont);
 
             if(isToday(item.dueDate)) {
-                tvDescription.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"), Typeface.BOLD);
-                tvDueDate.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "danielbd.ttf"), Typeface.BOLD);
-                //tvDueDate.setTextColor(tvDueDate.getResources().getColor(R.color.high_priority));
+                tvDescription.setTypeface(preferedFont, Typeface.BOLD);
+                tvDueDate.setTypeface(preferedFont, Typeface.BOLD);
             }
             if(item.priority == CommonConstants.HIGH_PRIORITY) {
                 tvDescription.setTextColor(tvDescription.getResources().getColor(R.color.high_priority));
